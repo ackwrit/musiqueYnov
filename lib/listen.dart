@@ -4,6 +4,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:musiqueynov/model/Morceau.dart';
 
+import 'main.dart';
+
 class Listen extends StatefulWidget{
 
 
@@ -71,6 +73,24 @@ class ListenState extends State<Listen>{
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+            icon:Icon(Icons.list),
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context){
+                    return MyHomePage(title: 'Musique Ynov',);
+                  }
+              ));
+            },
+          ),
+          IconButton(
+              onPressed: (){
+                //Ajouter un nouveau type musique
+              },
+              icon: Icon(Icons.add)
+          )
+        ],
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: (){
@@ -139,7 +159,7 @@ class ListenState extends State<Listen>{
               icon:Icon(Icons.fast_forward),
               onPressed: (){
                 //musique en en avance
-                lecture = statut.stopped;
+                lecture = statut.playing;
                 forward();
               },
             ),
@@ -181,7 +201,7 @@ class ListenState extends State<Listen>{
       await audioPlayer.play(widget.allMorceaux[widget.index].path_song,position: position);
     }
     else{
-      await audioPlayer.play(widget.allMorceaux[widget.index].path_song,);
+      await audioPlayer.play(widget.allMorceaux[widget.index].path_song,position: position);
     }
 
 
@@ -230,7 +250,7 @@ class ListenState extends State<Listen>{
 
 
   forward(){
- if(position.inSeconds+5<=duree.inSeconds){
+ if(position.inSeconds+10<duree.inSeconds){
    setState(() {
      position = new Duration(seconds: position.inSeconds+10);
      audioPlayer.pause();
