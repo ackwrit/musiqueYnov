@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "341503455027",
+    "project_id": "musiqueynov",
+    "storage_bucket": "musiqueynov.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:341503455027:android:02d7770966711d0af19846",
+        "android_client_info": {
+          "package_name": "com.example.musiqueynov"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "341503455027-scdcglu0ltrt32k2it74rr1be8pk0agm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPUXDlAwhnzEYNn00EO9bGMoL1ZQZW6fA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "341503455027-scdcglu0ltrt32k2it74rr1be8pk0agm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
