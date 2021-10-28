@@ -9,7 +9,7 @@ class Morceau{
   late String title_album;
   late String type_music;
   late String image;
-  late double duree;
+  late var duree;
   late String path_song;
 
 
@@ -21,7 +21,7 @@ class Morceau{
     title_album = map ["album"];
     type_music = map ["type_musique"];
     image = map ["photo"] ;
-    //duree = map ["durée"];
+    duree = map ["durée"];
     path_song = map ["path_song"];
 
   }

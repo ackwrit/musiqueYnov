@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
               return GridView.builder
                 (
                 padding: EdgeInsets.all(10),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,crossAxisSpacing: 2),
                   itemCount: documents.length,
                   itemBuilder: (context,index){
                     Morceau morceau = Morceau(documents[index]);
@@ -121,7 +121,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           height: 40,
                           child: Center(
-                            child: Text(morceau.author,style: TextStyle(color: Colors.black),) ,
+                            child: Text(morceau.author,style: TextStyle(color: Colors.red),) ,
 
                           )
 
@@ -152,3 +152,5 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+
