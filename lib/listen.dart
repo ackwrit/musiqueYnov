@@ -8,8 +8,10 @@ class Listen extends StatefulWidget{
 
 
 
-  Morceau music;
-  Listen({required Morceau this.music});
+
+  int index;
+  List <Morceau> allMorceaux =[];
+  Listen({required int this.index,required List <Morceau>this.allMorceaux});
 
 
 
@@ -94,14 +96,14 @@ class ListenState extends State<Listen>{
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               image: DecorationImage(
-                image: NetworkImage(widget.music.image),
+                image: NetworkImage(widget.allMorceaux[widget.index].image),
                 fit: BoxFit.fill
               )
             ),
           ),
         ),
-        Text(widget.music.title),
-        Text(widget.music.author),
+        Text(widget.allMorceaux[widget.index].title),
+        Text(widget.allMorceaux[widget.index].author),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -137,6 +139,8 @@ class ListenState extends State<Listen>{
               icon:Icon(Icons.fast_forward),
               onPressed: (){
                 //musique en en avance
+                lecture = statut.stopped;
+                forward();
               },
             ),
           ],
@@ -157,8 +161,10 @@ class ListenState extends State<Listen>{
             inactiveColor: Colors.red,
             onChanged: (va){
               setState(() {
+                //audioPlayer.pause();
                 Duration time = Duration(seconds: va.toInt());
                 position = time;
+                audioPlayer.play(widget.allMorceaux[widget.index].path_song,position: position);
               });
               print(position);
 
@@ -172,10 +178,10 @@ class ListenState extends State<Listen>{
 
   Future play() async {
     if(position>Duration(seconds: 0)){
-      await audioPlayer.play(widget.music.path_song,position: position);
+      await audioPlayer.play(widget.allMorceaux[widget.index].path_song,position: position);
     }
     else{
-      await audioPlayer.play(widget.music.path_song,);
+      await audioPlayer.play(widget.allMorceaux[widget.index].path_song,);
     }
 
 
@@ -185,7 +191,7 @@ class ListenState extends State<Listen>{
 
   Future pause() async {
     await audioPlayer.pause();
-    audioPlayer.seek(position);
+    //audioPlayer.seek(position);
     //configurationPlayer();
 
   }
@@ -193,12 +199,70 @@ class ListenState extends State<Listen>{
   rewind(){
     if(position>= Duration(seconds: 5)){
       setState(() {
-        audioPlayer.stop();
+        audioPlayer.pause();
         audioPlayer.seek(Duration(seconds: 0));
         position = new Duration(seconds: 0);
-        audioPlayer.play(widget.music.path_song);
+        audioPlayer.play(widget.allMorceaux[widget.index].path_song,position: position);
       });
     }
+    else
+      {
+        if(widget.index==0)
+          {
+            Navigator.push(context, MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return Listen(
+                      index: widget.allMorceaux.length-1, allMorceaux: widget.allMorceaux);
+                }
+            ));
+
+          }
+        else {
+          Navigator.push(context, MaterialPageRoute(
+              builder: (BuildContext context) {
+                return Listen(
+                    index: widget.index - 1, allMorceaux: widget.allMorceaux);
+              }
+          ));
+        }
+      }
+  }
+
+
+  forward(){
+ if(position.inSeconds+5<=duree.inSeconds){
+   setState(() {
+     position = new Duration(seconds: position.inSeconds+10);
+     audioPlayer.pause();
+     audioPlayer.play(widget.allMorceaux[widget.index].path_song,position: position);
+   });
+
+ }
+ else
+   {
+     if(widget.index==widget.allMorceaux.length-1)
+       {
+         audioPlayer.stop();
+         Navigator.push(context, MaterialPageRoute(
+             builder: (BuildContext context) {
+               return Listen(index: 0, allMorceaux: widget.allMorceaux);
+             }
+         ));
+       }
+     else
+       {
+         audioPlayer.stop();
+         Navigator.push(context, MaterialPageRoute(
+             builder: (BuildContext context) {
+               return Listen(index: widget.index+1, allMorceaux: widget.allMorceaux);
+             }
+         ));
+       }
+
+
+   }
+
+
   }
 
 
@@ -207,7 +271,7 @@ class ListenState extends State<Listen>{
     //audioPlayer = new AudioPlayer();
     //duree = audioPlayer.getDuration() as Duration;
     //print(duree);
-    audioPlayer.setUrl(widget.music.path_song);
+    audioPlayer.setUrl(widget.allMorceaux[widget.index].path_song);
 
     positionStream = audioPlayer.onAudioPositionChanged.listen((event) {
       setState(() {
@@ -227,7 +291,7 @@ class ListenState extends State<Listen>{
         setState(() async {
 
           duree = audioPlayer.getDuration() as Duration;
-          print(duree);
+          //print(duree);
         });
 
 

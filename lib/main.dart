@@ -14,6 +14,8 @@ void main() async{
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -56,6 +58,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late List <Morceau>allMorceau;
   int _counter = 0;
 
   void _incrementCounter() {
@@ -103,6 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
             else
             {
               List documents = snasphots.data!.docs;
+              allMorceau = [];
               return GridView.builder
                 (
                 padding: EdgeInsets.all(10),
@@ -110,6 +114,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemCount: documents.length,
                   itemBuilder: (context,index){
                     Morceau morceau = Morceau(documents[index]);
+
+                      allMorceau.add(morceau);
+
+                    print(allMorceau);
+
                     return InkWell(
                       child:Container(
                           decoration: BoxDecoration(
@@ -130,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       onTap: (){
                         Navigator.push(context, MaterialPageRoute(builder: (context){
-                          return Listen(music: morceau,);
+                          return Listen(allMorceaux:allMorceau,index: index,);
                         }));
                       },
 
