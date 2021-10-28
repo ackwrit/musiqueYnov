@@ -69,6 +69,13 @@ class ListenState extends State<Listen>{
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: (){
+            audioPlayer.stop();
+            Navigator.pop(context);
+          },
+        ),
         shadowColor: Colors.blueAccent,
         title: Text('Jean ragenarock'),
       ),
@@ -137,21 +144,21 @@ class ListenState extends State<Listen>{
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(duree.inMinutes.toString()),
-            Text("0.0")
+            Text(position.toString().substring(2,7)),
+            Text(duree.toString().substring(2,7))
 
           ],
         ),
-        Slider.adaptive(
-            max: 100,
-            min: 0,
+        Slider(
+            max: (duree == null)?0.0:duree.inSeconds.toDouble(),
+            min: 0.0,
             value: position.inSeconds.toDouble(),
             activeColor: Colors.green,
             inactiveColor: Colors.red,
             onChanged: (va){
               setState(() {
-                Duration duree = Duration(seconds: va.toInt());
-                position = duree;
+                Duration time = Duration(seconds: va.toInt());
+                position = time;
               });
               print(position);
 
@@ -198,11 +205,23 @@ class ListenState extends State<Listen>{
 
   configurationPlayer(){
     //audioPlayer = new AudioPlayer();
+    //duree = audioPlayer.getDuration() as Duration;
+    //print(duree);
+    audioPlayer.setUrl(widget.music.path_song);
+
     positionStream = audioPlayer.onAudioPositionChanged.listen((event) {
       setState(() {
         position =event;
       });
     });
+
+
+    audioPlayer.onDurationChanged.listen((event) {
+      setState(() {
+        duree = event;
+      });
+    });
+
     stateStream = audioPlayer.onPlayerStateChanged.listen((event) {
       if(event == statut.playing){
         setState(() async {
