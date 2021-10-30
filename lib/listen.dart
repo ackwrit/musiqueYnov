@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:musiqueynov/ajouter.dart';
 import 'package:musiqueynov/model/Morceau.dart';
 
 import 'main.dart';
@@ -87,6 +88,12 @@ class ListenState extends State<Listen>{
           IconButton(
               onPressed: (){
                 //Ajouter un nouveau type musique
+                audioPlayer.stop();
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context){
+                    return ajouter();
+                  }
+                ));
               },
               icon: Icon(Icons.add)
           )
@@ -227,6 +234,7 @@ class ListenState extends State<Listen>{
     }
     else
       {
+        audioPlayer.stop();
         if(widget.index==0)
           {
             Navigator.push(context, MaterialPageRoute(

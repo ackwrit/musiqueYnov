@@ -2,6 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+    <string>musiqueYnov souhaite accéder à la caméra</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>musiqueYnov souhaite accéder à la librairie</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>musiqueYnov souhaite enregitrer librairie</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>musiqueYnov souhaite accéder au microphone</string>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>musiqueYnov souhaite accéder à votre musique</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

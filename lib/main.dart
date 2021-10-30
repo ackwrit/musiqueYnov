@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:musiqueynov/ajouter.dart';
 import 'package:musiqueynov/function/firestoreHelper.dart';
 import 'package:musiqueynov/listen.dart';
 import 'package:musiqueynov/model/Morceau.dart';
@@ -88,6 +89,11 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
               onPressed: (){
                 //ajouter un nouveau son
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (BuildContext context){
+                      return ajouter();
+                    }
+                ));
               },
               icon: Icon(Icons.add)
           ),
