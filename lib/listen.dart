@@ -19,6 +19,7 @@ class Listen extends StatefulWidget{
 
 
 
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -37,6 +38,7 @@ class ListenState extends State<Listen>{
   Duration position= Duration(seconds: 0);
   late StreamSubscription positionStream;
   late StreamSubscription stateStream;
+  double volumeSound = 0.5;
 
 
 
@@ -106,109 +108,186 @@ class ListenState extends State<Listen>{
           },
         ),
         shadowColor: Colors.blueAccent,
-        title: Text('Jean ragenarock'),
+        title: Text('Musique Ynov'),
       ),
       body: BodyState(),
     );
   }
 
   Widget BodyState(){
-    return Column(
-      children: [
-        SizedBox(height: 10,),
-        Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width/1.2,
-            height: 150,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              image: DecorationImage(
-                image: NetworkImage(widget.allMorceaux[widget.index].image),
-                fit: BoxFit.fill
-              )
+    return Container(
+      padding: EdgeInsets.only(left: 10,right: 10),
+      child: Column(
+        children: [
+          SizedBox(height: 10,),
+          Center(
+            child: AnimatedContainer(
+              width: (lecture == statut.paused)?MediaQuery.of(context).size.width/1.2:MediaQuery.of(context).size.width/2,
+              height: (lecture == statut.paused)?350:150,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  image: DecorationImage(
+                      image: NetworkImage(widget.allMorceaux[widget.index].image),
+                      fit: BoxFit.fill
+                  )
+              ),
+              duration: Duration(seconds :1),
+              curve: Curves.easeIn,
             ),
           ),
-        ),
-        Text(widget.allMorceaux[widget.index].title),
-        Text(widget.allMorceaux[widget.index].author),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
+          SizedBox(height: 10,),
+          Text(widget.allMorceaux[widget.index].title),
+          Text(widget.allMorceaux[widget.index].author),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
                 icon:Icon(Icons.fast_rewind),
-              onPressed: (){
+                onPressed: (){
                   lecture =statut.playing;
                   rewind();
-              },
+                },
 
-            ),
-            (lecture==statut.stopped)?IconButton(
-              icon:Icon(Icons.play_arrow,size: 40),
-              onPressed: (){
-                setState(() {
-                  lecture = statut.paused;
-                  play();
-                });
+              ),
+              (lecture==statut.stopped)?IconButton(
+                icon:Icon(Icons.play_arrow,size: 40),
+                onPressed: (){
+                  setState(() {
+                    lecture = statut.paused;
+                    play();
+                  });
 
-              },
-            ):
-            IconButton(
+                },
+              ):
+              IconButton(
                 icon:Icon(Icons.pause,size: 40,),
-              onPressed: (){
+                onPressed: (){
                   //musique en pause
+                  setState(() {
+                    lecture = statut.stopped;
+                    pause();
+                  });
+                },
+              ),
+              IconButton(
+                icon:Icon(Icons.fast_forward),
+                onPressed: (){
+                  //musique en en avance
+                  lecture = statut.playing;
+                  forward();
+                },
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(position.toString().substring(2,7)),
+              Text(duree.toString().substring(2,7))
+
+            ],
+          ),
+
+
+          Slider(
+              max: (duree == null)?0.0:duree.inSeconds.toDouble(),
+              min: 0.0,
+
+              value: position.inSeconds.toDouble(),
+              activeColor: Colors.green,
+              inactiveColor: Colors.red,
+              onChanged: (va){
                 setState(() {
-                  lecture = statut.stopped;
-                  pause();
+                  //audioPlayer.pause();
+                  Duration time = Duration(seconds: va.toInt());
+                  position = time;
+                  audioPlayer.play(widget.allMorceaux[widget.index].path_song,position: position,volume: volumeSound);
                 });
-              },
-            ),
-            IconButton(
-              icon:Icon(Icons.fast_forward),
-              onPressed: (){
-                //musique en en avance
-                lecture = statut.playing;
-                forward();
-              },
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(position.toString().substring(2,7)),
-            Text(duree.toString().substring(2,7))
+                print(position);
 
-          ],
-        ),
-        Slider(
-            max: (duree == null)?0.0:duree.inSeconds.toDouble(),
-            min: 0.0,
-            value: position.inSeconds.toDouble(),
-            activeColor: Colors.green,
-            inactiveColor: Colors.red,
-            onChanged: (va){
-              setState(() {
-                //audioPlayer.pause();
-                Duration time = Duration(seconds: va.toInt());
-                position = time;
-                audioPlayer.play(widget.allMorceaux[widget.index].path_song,position: position);
-              });
-              print(position);
+              }),
 
-            })
-        
-      ],
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                  onPressed: (){
+                    if(volumeSound-0.1 <=0){
+                      setState(() {
+                        volumeSound = 0;
+                        audioPlayer.setVolume(volumeSound);
+
+                      });
+
+                    }
+                    else
+                    {
+                      setState(() {
+                        volumeSound = volumeSound - 0.1;
+                        audioPlayer.setVolume(volumeSound);
+
+                      });
+                    }
+                    //play();
+                  },
+                  icon: Icon(Icons.volume_down_rounded)
+              ),
+              Expanded(
+                child: Slider(
+                    max: 1.0,
+                    min: 0.0,
+                    value: volumeSound,
+                    activeColor: Colors.amber,
+                    inactiveColor: Colors.white,
+                    onChanged: (value){
+                      setState(() {
+                        volumeSound = value;
+                        audioPlayer.setVolume(volumeSound);
+                      });
+                    }
+                ),
+              ),
+
+              IconButton(
+                  onPressed: (){
+                    if(volumeSound+0.1 >= 1){
+                      setState(() {
+                        volumeSound = 1;
+                        audioPlayer.setVolume(volumeSound);
+                      });
+
+                    }
+                    else
+                    {
+                      setState(() {
+                        volumeSound = volumeSound + 0.1;
+                        audioPlayer.setVolume(volumeSound);
+                      });
+                    }
+                    //play();
+                  },
+                  icon: Icon(Icons.volume_up_rounded)
+              ),
+            ],
+          ),
+
+
+
+        ],
+      ),
     );
+
   }
 
 
 
   Future play() async {
     if(position>Duration(seconds: 0)){
-      await audioPlayer.play(widget.allMorceaux[widget.index].path_song,position: position);
+      await audioPlayer.play(widget.allMorceaux[widget.index].path_song,position: position,volume: volumeSound);
     }
     else{
-      await audioPlayer.play(widget.allMorceaux[widget.index].path_song,position: position);
+      await audioPlayer.play(widget.allMorceaux[widget.index].path_song,position: position,volume: volumeSound);
     }
 
 

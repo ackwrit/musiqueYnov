@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:musiqueynov/function/firestoreHelper.dart';
@@ -286,6 +287,24 @@ class ajouterState extends State<ajouter>{
                         setState(() {
                           waiting = false;
                         });
+                        //Ajouter une notification local
+
+                        await AwesomeNotifications().createNotification(
+                            content: NotificationContent(
+                              id:89, channelKey: 'basic_channel', title: albumfile,
+                                body: 'Votre musique ${titrefile} a bien été ajouté',
+
+
+                            ),
+
+
+
+                        ).catchError((error){
+                          print(error.toString());
+                        });
+
+
+                        // Chemin vers la page principal
                         Navigator.push(context, MaterialPageRoute(
                             builder: (BuildContext context){
                               return MyHomePage(title: "Musique Ynov");
@@ -451,7 +470,7 @@ class ajouterState extends State<ajouter>{
               typeMusiquefile = newValue!;
             });
             },
-            items:<String>['Rap',"Electro","R&B","Rock","Dance"].map<DropdownMenuItem<String>>((value) {
+            items:<String>['Rap',"Electro","R&B","Rock","Dance","Pop","Techno","Jazz","Blues"].map<DropdownMenuItem<String>>((value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),

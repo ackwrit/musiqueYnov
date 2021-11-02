@@ -5,10 +5,14 @@ import 'package:musiqueynov/ajouter.dart';
 import 'package:musiqueynov/function/firestoreHelper.dart';
 import 'package:musiqueynov/listen.dart';
 import 'package:musiqueynov/model/Morceau.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  AwesomeNotifications().actionStream.listen((event) {
+    print(event);
+  });
   runApp(const MyApp());
 }
 
@@ -20,6 +24,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -62,6 +67,8 @@ class _MyHomePageState extends State<MyHomePage> {
   late List <Morceau>allMorceau;
   int _counter = 0;
 
+
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -75,6 +82,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    NotificationChannel notificationChannel = NotificationChannel(
+      channelKey: 'basic_channel',
+      channelName: 'titre de la notification',
+      channelDescription: 'La description de la notification'
+
+    );
+    AwesomeNotifications().initialize(null, [notificationChannel]);
+
+
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
@@ -82,6 +105,11 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    AwesomeNotifications().isNotificationAllowed().then((permission){
+      if(!permission){
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
+    });
     return
       Scaffold(
       appBar: AppBar(
